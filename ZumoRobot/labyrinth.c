@@ -73,7 +73,6 @@ void zmain(void)
             loopbreak = 1;
             dir = 2;
         } else if(d <= 20 && lastdir == 2){
-            laastari = x;
             motor_tankturn(0,1,255,255,0);
             while(!(!dig.l3 && !dig.l2 && !dig.l1 && !dig.r1 && !dig.r2 && !dig.r3)){
                 reflectance_digital(&dig);
@@ -83,7 +82,6 @@ void zmain(void)
                 reflectance_digital(&dig);
                 motor_tankturn(0,1,255,255,0);
             }
-            x = laastari;
             lastdir = 0;
             loopbreak = 1;
             dir = 3;
