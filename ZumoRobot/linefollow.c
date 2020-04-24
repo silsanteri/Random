@@ -23,6 +23,8 @@
 #include <sys/time.h>
 #include <stdio.h>
 
+//AUTHOR @silsanteri @dievskiy @DXGGX
+
 void motor_tankturn(uint8 l_driv, uint8 r_driv, uint8 l_speed, uint8 r_speed, uint16 delay)
 {
     MotorDirLeft_Write(l_driv);
