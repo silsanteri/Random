@@ -1,5 +1,7 @@
 # Random
 
+* GameMoney
+  * Java - Money class that automatically converts extremely big values in a way that's easier to comprehend for the user.
 * Git
   * Git - Git commands for future usage.
 * SuomiClicker
