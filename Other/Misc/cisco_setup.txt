@@ -1,0 +1,61 @@
+Change hostname:
+Switch> enable
+Switch# config t
+Switch(config)# hostname XXX
+
+Change console password:
+XXX(config)# line console 0
+XXX(config-line)# password xxx
+XXX(config-line)# login
+XXX(config-line)# exit
+
+Change VTY password:
+XXX(config)#line vty 0 4
+XXX(config-line)#password xxx
+XXX(config-line)#login
+XXX(config-line)#exit
+
+Change EXEC password:
+XXX(config)# enable secret xxx
+
+Encrypt passwords:
+XXX(config)# service password-encryption
+
+Change MOTD:
+XXX(config)# banner motd "xxx"
+
+Configure IPv4 IP address:
+XXX(config)# int vlan 1
+XXX(config-if)# ip address 192.168.1.1 255.255.255.0
+XXX(config-if)# no shutdown
+XXX(config-if)# exit
+
+Configure IPv6 IP address:
+XXX(config)# ipv6 unicast-routing
+XXX(config)# int G0/0
+XXX(config-if)# ipv6 address 2001:db8:1:1::1/64
+XXX(config-if)# ipv6 address fe80::1 link-local
+XXX(config-if)# no shutdown
+XXX(config-if)# exit
+
+Show interface status:
+XXX# show ip interface brief
+XXX# show ipv6 interface brief
+
+Disable DNS Lookup:
+XXX(config)#no ip domain-lookup
+
+Enable SSH:
+XXX(config)#username xxx privilege 15 secret xxx
+XXX(config)#ip domain-name xxx.com
+XXX(config)#crypto key generate rsa
+How many bits in the modulus [512]: xxx
+XXX(config)#line vty 0 15
+XXX(config-line)#transport input ssh
+XXX(config-line)#login local
+XXX(config-line)#no password
+XXX(config-line)#exit
+
+Save changes:
+XXX# copy run start
+Destination filename [startup-config]?[Enter]

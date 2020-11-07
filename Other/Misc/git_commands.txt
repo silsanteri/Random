@@ -1,0 +1,6 @@
+Remove Cache:
+git rm -r --cached .
+
+Rollback:
+git reset --hard *token*
+git push --force
