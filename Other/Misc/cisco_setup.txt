@@ -1,61 +1,147 @@
 Change hostname:
 Switch> enable
 Switch# config t
-Switch(config)# hostname XXX
+Switch(config)# hostname *hostname*
+
 
 Change console password:
 XXX(config)# line console 0
-XXX(config-line)# password xxx
+XXX(config-line)# password *password*
 XXX(config-line)# login
 XXX(config-line)# exit
 
+
 Change VTY password:
-XXX(config)#line vty 0 4
-XXX(config-line)#password xxx
+XXX(config)#line vty 0 15
+XXX(config-line)#password *password*
 XXX(config-line)#login
 XXX(config-line)#exit
 
+
 Change EXEC password:
-XXX(config)# enable secret xxx
+XXX(config)# enable secret *password*
+
 
 Encrypt passwords:
 XXX(config)# service password-encryption
 
+
 Change MOTD:
-XXX(config)# banner motd "xxx"
+XXX(config)# banner motd "*text*"
+
 
 Configure IPv4 IP address:
-XXX(config)# int vlan 1
-XXX(config-if)# ip address 192.168.1.1 255.255.255.0
+XXX(config)# int vlan *vlan_number*
+XXX(config-if)# ip address *ip_address* *subnet*
 XXX(config-if)# no shutdown
 XXX(config-if)# exit
 
-Configure IPv6 IP address:
+
+Configure ipv6 IP address:
 XXX(config)# ipv6 unicast-routing
-XXX(config)# int G0/0
-XXX(config-if)# ipv6 address 2001:db8:1:1::1/64
-XXX(config-if)# ipv6 address fe80::1 link-local
+XXX(config)# int *interface*
+XXX(config-if)# ipv6 address *ipv6_address*
+XXX(config-if)# ipv6 address *ipv6_linklocal_address* link-local
 XXX(config-if)# no shutdown
 XXX(config-if)# exit
+
 
 Show interface status:
-XXX# show ip interface brief
-XXX# show ipv6 interface brief
+XXX#show ip interface brief
+XXX#show ipv6 interface brief
+
 
 Disable DNS Lookup:
 XXX(config)#no ip domain-lookup
 
+
 Enable SSH:
-XXX(config)#username xxx privilege 15 secret xxx
-XXX(config)#ip domain-name xxx.com
+XXX(config)#username *username* privilege 15 secret *password*
+XXX(config)#ip domain-name *domain*
 XXX(config)#crypto key generate rsa
-How many bits in the modulus [512]: xxx
+How many bits in the modulus [512]: *bits*
 XXX(config)#line vty 0 15
 XXX(config-line)#transport input ssh
 XXX(config-line)#login local
 XXX(config-line)#no password
 XXX(config-line)#exit
 
+
+Enable VLAN:
+XXX(config)#vlan *vlan*
+XXX(config-vlan)#name *name*
+XXX(config-vlan)#exit
+XXX(config)#int *interface*
+XXX(config-if)#switchport mode access
+XXX(config-if)#switchport access vlan *vlan_number*
+XXX(config-if)#exit
+
+
+Enable VLAN VoIP:
+XXX(config)#vlan *vlan*
+XXX(config-vlan)#name *name*
+XXX(config-vlan)#exit
+XXX(config)#int *interface*
+XXX(config-if)#switchport mode access
+XXX(config-if)#switchport access vlan *vlan_number*
+XXX(config-if)#mls qos trust cos
+XXX(config-if)#switchport voice vlan *vlan_number*
+XXX(config-if)#exit
+
+
+Configure Trunk:
+XXX(config)#int *interface*
+XXX(config-if)#switchport mode trunk
+XXX(config-if)#switchport trunk native vlan *vlan_number*
+XXX(config-if)#exit
+
+
+Configure DTP:
+XXX(config)#int xxx
+XXX(config-if)#switchport mode dynamic desirable
+XXX(config-if)#switchport trunk native vlan xxx
+XXX(config-if)#exit
+or
+XXX(config)#int xxx
+XXX(config-if)#switchport mode trunk
+XXX(config-if)#switchport nonegotiate
+XXX(config-if)#switchport trunk native vlan xxx
+XXX(config-if)#exit
+
+
+Configure DHCPv4:
+XXX(config)#ip dhcp excluded-address *ip_start* *ip_end*
+XXX(config)#ip dhcp pool *name*
+XXX(dhcp-config)# network *ip_address* *subnet*
+XXX(dhcp-config)# default-router *ip_address*
+XXX(dhcp-config)# dns-server *ip_address*
+XXX(config)#int *interface*
+XXX(config-if)# ip helper-address *ip_address*
+YYY(config)#int *interface*
+YYY(config-if)#ip address dhcp
+YYY(config-if)#no shutdown
+
+
+Configure HSRP:
+XXX(config)# interface *interface*
+XXX(config-if)# standby version 2
+XXX(config-if)# standby 1 ip *ip_address*
+XXX(config-if)# standby 1 priority 150
+XXX(config-if)# standby 1 preempt
+YYY(config)# interface *interface*
+YYY(config-if)# standby version 2
+YYY(config-if)# standby 1 ip *ip_address*
+
+Implement Port Security:
+XXX(config)# interface range *used_interfaces*
+XXX(config-if-range)# switchport port-security
+XXX(config-if-range)# switchport port-security maximum 1
+XXX(config-if-range)# switchport port-security mac-address sticky
+XXX(config-if-range)# switchport port-security violation restrict
+XXX(config-if-range)# interface range *unused_interfaces*
+XXX(config-if-range)# shutdown
+
+
 Save changes:
-XXX# copy run start
+XXX#copy run start
 Destination filename [startup-config]?[Enter]

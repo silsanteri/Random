@@ -1,4 +1,4 @@
-// Exercise 5
+// Exercise 6 - Time.cpp
 
 #include <iostream>
 #include <string>
@@ -6,91 +6,13 @@
 #include <cstdlib>
 #include <cstdint>
 #include <ios>
-#include <time.h>
 #include <limits>
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
+#include "Time.h"
 
-using namespace std;
-
-class Time {
-    private:
-        int hour, minute;
-    public:
-        Time();
-        friend ostream &operator<<(ostream &out, const Time &notThis);
-        bool operator<(const Time &notThis) const;
-        Time operator+(const Time &notThis) const;
-        Time operator-(const Time &notThis) const;
-        Time& operator++();
-        Time operator++(int);
-        void read(string msg);
-        bool lessThan(Time notThis);
-        Time subtract(Time notThis);
-        void display();
-};
-
-void print(const vector<Time> &v);
-bool validTest(const string & s);
-
-int main() {
-	Time time1, time2, duration;
-
-	time1.read("Enter time 1");
-	time2.read("Enter time 2");
-	if (time1<time2) {
-		duration = time2 - time1;
-		cout << "Starting time was " << time1 << endl;
-	} else {
-		duration = time1 - time2;
-		cout << "Starting time was " << time2 << endl;
-	}
-	cout << "Duration was " << duration << endl;
-
-	vector<Time> tv(5); 
-	for(auto &t : tv) {
-		t.read("Enter time:");
-	}
-
-	cout << "Times: " << endl;
-	print(tv);
-	
-	Time sum;
-	for(auto t : tv) {
-		sum = sum + t;
-	}
-	
-	cout << "Sum of times: " << sum << endl;
-	
-	cout << "Post-increment: " << endl;
-	print(tv);
-	for(auto &t : tv) {
-		cout << t++ << endl;
-	}
-	
-	print(tv);
-
-	cout << "Pre-increment: " << endl;
-	for(auto &t : tv) {
-		cout << ++t << endl;
-	}
-
-	sort(tv.begin(), tv.end());
-
-	cout << "Sorted times: " << endl;
-	print(tv);
-
-	return 0;
-}
-
-void print(const vector<Time> &v){
-	for(auto &t : v) {
-		cout << t << endl;
-	}
-}
-
-bool validTest(const string & s){
+bool validTest(const std::string & s){
     if(s.size() != 2){
         return false;
     } else {
@@ -108,10 +30,29 @@ Time::Time(){
     this->minute = 00;
 }
 
-ostream &operator<<(ostream &out, const Time &notThis){
-    out << setiosflags(ios::right); cout << setfill('0') << setw(2) << notThis.hour;
-    out << ":" << setfill('0') << setw(2) << notThis.minute << endl;
+Time::Time(int hh, int mm){ //This constructor doesn't check for valid times, because it's mainly used to add offset to times.
+    this->hour = hh;
+    this->minute = mm;
+}
+
+std::ostream &operator<<(std::ostream &out, const Time &notThis){
+    out << std::setiosflags(std::ios::right); std::cout << std::setfill('0') << std::setw(2) << notThis.hour;
+    out << ":" << std::setfill('0') << std::setw(2) << notThis.minute << std::endl;
     return out;
+}
+
+std::istream &operator>>(std::istream &in, Time &notThis){
+    char colon;
+    int hh, mm;
+    if(in >> hh >> colon >> mm){
+        if(hh <= 23 && hh >= 0 && colon == ':' && mm <= 59 && mm >= 0){
+            notThis.hour = hh;
+            notThis.minute = mm;
+        } else {
+            in.setstate(std::ios_base::failbit);
+        }
+    }
+    return in;
 }
 
 bool Time::operator<(const Time &notThis) const {
@@ -121,6 +62,24 @@ bool Time::operator<(const Time &notThis) const {
         return false;
     } else {
         return true;
+    }
+}
+
+bool Time::operator>(const Time &notThis) const {
+    if(this->hour > notThis.hour){
+        return true;
+    } else if (this->hour == notThis.hour && this->minute > notThis.minute){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Time::operator==(const Time &notThis) const {
+    if(this->hour == notThis.hour && this->minute == notThis.minute){
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -178,29 +137,28 @@ Time Time::operator++(int) {
     return temp;
 }
 
-
-void Time::read(string msg){
-    string hh = "", mm = "";
+void Time::read(std::string msg){
+    std::string hh = "", mm = "";
 
     while(1){
-        cout << msg << ": " << flush;
-        cin >> hh >> mm;
+        std::cout << msg << ": " << std::flush;
+        std::cin >> hh >> mm;
 
-        if (cin.good() && validTest(hh) && validTest(mm)){
+        if (std::cin.good() && validTest(hh) && validTest(mm)){
             try {
                 this->hour = stoi(hh);
                 this->minute = stoi(mm);
             } catch(...){
             }
             if(this->hour <= 23 && this->hour >= 0 && this->minute <= 59 && this->minute >= 0){
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 break;
             }
         }
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Invalid input!" << endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input!" << std::endl;
     }
 }
 
@@ -225,6 +183,15 @@ Time Time::subtract(Time notThis){
 }
 
 void Time::display(){
-    cout << setiosflags(ios::right); cout << setfill('0') << setw(2) << this->hour;
-    cout << ":" << setfill('0') << setw(2) << this->minute << endl;
+    std::cout << std::setiosflags(std::ios::right); std::cout << std::setfill('0') << std::setw(2) << this->hour;
+    std::cout << ":" << std::setfill('0') << std::setw(2) << this->minute << std::endl;
+}
+
+std::string Time::getString(){
+    std::string final;
+    std::stringstream ss;
+    ss << std::setiosflags(std::ios::right) << std::setfill('0') << std::setw(2) << this->hour;
+    ss << ":" << std::setfill('0') << std::setw(2) << this->minute << std::endl;
+    getline(ss, final);
+    return final;
 }
